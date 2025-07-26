@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Detail Proz - Premium Mobile Car Detailing | Los Angeles</title>
+    <meta name="description" content="Premium mobile car detailing services in Los Angeles. Professional, convenient, and luxury car care that comes to you. Licensed, insured, and 5-star rated." />
+    <meta name="keywords" content="mobile car detailing, car wash, auto detailing, Los Angeles, premium car care, ceramic coating, paint correction" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://thedetailproz.com/" />
+    <meta property="og:title" content="The Detail Proz - Premium Mobile Car Detailing" />
+    <meta property="og:description" content="Professional mobile car detailing services in Los Angeles. Licensed, insured, and 5-star rated." />
+    <meta property="og:image" content="/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://thedetailproz.com/" />
+    <meta property="twitter:title" content="The Detail Proz - Premium Mobile Car Detailing" />
+    <meta property="twitter:description" content="Professional mobile car detailing services in Los Angeles. Licensed, insured, and 5-star rated." />
+    <meta property="twitter:image" content="/og-image.jpg" />
+
+    <!-- Schema.org markup for Google+ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "The Detail Proz",
+      "image": "https://thedetailproz.com/logo.jpg",
+      "description": "Premium mobile car detailing services in Los Angeles",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Los Angeles",
+        "addressRegion": "CA",
+        "addressCountry": "US"
+      },
+      "telephone": "+1-234-567-8900",
+      "email": "info@thedetailproz.com",
+      "url": "https://thedetailproz.com",
+      "openingHours": [
+        "Mo-Fr 08:00-18:00",
+        "Sa 09:00-17:00", 
+        "Su 10:00-16:00"
+      ],
+      "priceRange": "$89-$349",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5.0",
+        "reviewCount": "200"
+      },
+      "serviceArea": {
+        "@type": "GeoCircle",
+        "geoMidpoint": {
+          "@type": "GeoCoordinates",
+          "latitude": "34.0522",
+          "longitude": "-118.2437"
+        },
+        "geoRadius": "50000"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Car Detailing Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Essential Detail",
+              "description": "Basic car detailing package"
+            },
+            "price": "89-129",
+            "priceCurrency": "USD"
+          },
+          {
+            "@type": "Offer", 
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Premium Detail",
+              "description": "Comprehensive car detailing with paint protection"
+            },
+            "price": "149-199",
+            "priceCurrency": "USD"
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service", 
+              "name": "Luxury Detail",
+              "description": "Complete luxury car detailing with ceramic coating"
+            },
+            "price": "249-349",
+            "priceCurrency": "USD"
+          }
+        ]
+      }
+    }
+    </script>
+
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Roboto:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- Critical CSS for above-the-fold content -->
+    <style>
+      body { 
+        font-family: 'Roboto', sans-serif; 
+        margin: 0; 
+        padding: 0; 
+        line-height: 1.6; 
+      }
+      .hero-loading { 
+        height: 100vh; 
+        background: linear-gradient(135deg, #4A148C 0%, #212121 100%); 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        color: white; 
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="hero-loading">
+        <div style="text-align: center;">
+          <div style="width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 3px solid white; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+          <p>Loading The Detail Proz...</p>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <style>
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </body>
+</html>
