@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import About from './components/About';
 import Services from './components/Services';
+import SEOContent from './components/SEOContent';
 import Testimonials from './components/Testimonials';
 import Gallery from './components/Gallery';
 import Contact from './components/Contact';
@@ -94,6 +95,7 @@ function MainApp() {
       <Hero phone={businessSettings} />
       <About />
       <Services phone={businessSettings} />
+      <SEOContent />
       <Testimonials />
       <Gallery />
       <Contact phone={businessSettings} />

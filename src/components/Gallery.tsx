@@ -146,11 +146,11 @@ const Gallery: React.FC = () => {
           className="text-center mb-16 relative z-10"
         >
           <h2 className="text-4xl md:text-5xl font-serif text-white mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-            Our Work Gallery
+            East Texas Car Detailing Gallery
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-purple-400 to-purple-600 mx-auto mb-8"></div>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            See the transformation we bring to every vehicle with our premium detailing services
+            See the transformation we bring to vehicles across Kilgore, Longview, Tyler & East Texas with our premium mobile car detailing services
           </p>
         </motion.div>
 

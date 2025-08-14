@@ -187,11 +187,11 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-serif text-white mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-            Our Service Packages
+            Mobile Car Detailing Packages
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-purple-400 to-purple-600 mx-auto mb-8"></div>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Choose from our carefully crafted packages designed to meet every need and budget
+            Professional mobile car detailing packages for Kilgore, Longview, Tyler & East Texas
           </p>
         </motion.div>
 

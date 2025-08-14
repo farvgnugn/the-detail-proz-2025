@@ -165,7 +165,7 @@ const Testimonials: React.FC = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-serif text-gray-900 mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-            What Our Clients Say
+            East Texas Car Detailing Reviews
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-purple-600 to-purple-800 mx-auto mb-8"></div>
           <div className="flex items-center justify-center gap-2 mb-4">
@@ -176,7 +176,7 @@ const Testimonials: React.FC = () => {
             </div>
             <span className="text-lg font-semibold text-gray-900">5.0 Average Rating</span>
           </div>
-          <p className="text-gray-700">Based on 200+ Google and Facebook reviews</p>
+          <p className="text-gray-700">Based on 100+ Google and Facebook reviews from satisfied East Texas customers</p>
         </motion.div>
 
         <div className="relative max-w-6xl mx-auto">

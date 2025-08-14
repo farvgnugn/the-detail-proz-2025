@@ -93,7 +93,7 @@ const Hero: React.FC<HeroProps> = ({ phone }) => {
           className="text-4xl md:text-6xl lg:text-7xl font-serif mb-6 leading-tight lg:hero-title"
           style={{ fontFamily: 'Playfair Display, serif' }}
         >
-          Premium Mobile
+          East Texas Mobile
           <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-600">
             <span className="lg:leading-relaxed">Car Detailing</span>
           </span>
@@ -105,7 +105,7 @@ const Hero: React.FC<HeroProps> = ({ phone }) => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-xl md:text-2xl mb-8 text-gray-200 max-w-2xl mx-auto"
         >
-          Professional detailing services that come to you. Experience luxury, convenience, and perfection.
+          Professional mobile car detailing in Kilgore, Longview, Tyler & East Texas. Premium service that comes to you.
         </motion.p>
 
         <motion.div

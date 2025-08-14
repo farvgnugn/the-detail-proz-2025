@@ -1,0 +1,18 @@
+# Netlify redirects file
+
+# Admin route handling
+/admin /index.html 200
+
+# Redirect common car detailing search patterns
+/car-detailing-kilgore / 301
+/mobile-car-detailing-longview / 301
+/auto-detailing-tyler / 301
+/car-detailing-east-texas / 301
+/mobile-detailing / 301
+
+# Force HTTPS
+http://thedetailproz.com/* https://thedetailproz.com/:splat 301!
+http://www.thedetailproz.com/* https://thedetailproz.com/:splat 301!
+
+# Handle SPA routing
+/* /index.html 200

@@ -43,7 +43,7 @@ const About: React.FC = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-serif text-gray-900 mb-6" style={{ fontFamily: 'Playfair Display, serif' }}>
-            About The Detail Proz
+            East Texas's Premier Mobile Car Detailing
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-purple-600 to-purple-800 mx-auto mb-8"></div>
         </motion.div>
@@ -55,10 +55,10 @@ const About: React.FC = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              The Detail Proz brings premium mobile car detailing directly to your doorstep. With over 10 years of experience, we transform your vehicle using only the finest products and techniques. Our mobile service covers a large portion of East Texas, offering unmatched convenience without compromising on quality.
+              The Detail Proz brings premium mobile car detailing directly to your doorstep in Kilgore, Longview, Tyler, and throughout East Texas. With over 4 years of experience, we transform your vehicle using only the finest products and techniques. Our mobile car detailing service covers East Texas, offering unmatched convenience without compromising on quality.
             </p>
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Got 4 or more rides? We’ll knock down the price! Businesses get a group discount when you book 4+ vehicles — let’s keep your whole crew shining.
+              Serving Kilgore, Longview, Tyler, Henderson, Gladewater, White Oak, Liberty City, and Hallsville with professional mobile car detailing. Got 4 or more vehicles? We offer group discounts for businesses and families — let's keep your whole fleet shining with our premium auto detailing services.
             </p>
             
             <div className="grid grid-cols-2 gap-6">

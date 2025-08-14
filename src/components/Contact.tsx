@@ -113,7 +113,7 @@ const Contact: React.FC<ContactProps> = ({ phone }) => {
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-purple-400 to-purple-600 mx-auto mb-8"></div>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Ready to experience premium mobile car detailing? Contact us today for a free estimate
+            Ready to experience premium mobile car detailing in East Texas? Contact us today for a free estimate in Kilgore, Longview, Tyler and surrounding areas
           </p>
         </motion.div>
 
@@ -150,7 +150,7 @@ const Contact: React.FC<ContactProps> = ({ phone }) => {
                   </div>
                   <div>
                     <p className="font-semibold">Service Area</p>
-                    <p className="text-gray-300">East Texas</p>
+                    <p className="text-gray-300">Kilgore, Longview, Tyler & East Texas</p>
                   </div>
                 </div>
               </div>
@@ -175,12 +175,15 @@ const Contact: React.FC<ContactProps> = ({ phone }) => {
             {/* Service Areas */}
             <div>
               <h4 className="text-xl font-semibold mb-4">Service Areas</h4>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2 text-sm">
                 {serviceAreas.map((area, index) => (
-                  <div key={index} className="text-gray-300 text-sm">
+                  <div key={index} className="text-gray-300">
                     • {area}
                   </div>
                 ))}
+                <div className="col-span-2 text-gray-400 text-xs mt-2">
+                  Mobile car detailing services available throughout East Texas
+                </div>
               </div>
             </div>
 
