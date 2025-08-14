@@ -42,7 +42,7 @@ const Header: React.FC<HeaderProps> = ({ phone }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <img 
-              src="/src/assets/The Detail Proz.png" 
+              src="/src/assets/The_Detail_Proz.png" 
               alt="The Detail Proz Logo" 
               className={`w-auto object-contain transition-all duration-700 ease-out ${
                 isScrolled ? 'h-20 max-w-[360px]' : 'h-40 max-w-[720px]'
