@@ -15,7 +15,9 @@ const GalleryManagementPanel: React.FC = () => {
     url: '',
     alt: '',
     category: 'process',
-    order: 0
+    order: 0,
+    storage_path: undefined,
+    file_size: undefined
   });
   const [uploadingFile, setUploadingFile] = useState(false);
   const [uploadError, setUploadError] = useState<string>('');
