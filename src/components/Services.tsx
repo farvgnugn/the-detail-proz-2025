@@ -202,18 +202,100 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-              className={`relative bg-white rounded-2xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-300 ${
+              className={`relative bg-white rounded-2xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-300 flex flex-col ${
                 pkg.popular ? 'ring-2 ring-purple-500' : ''
               }`}
             >
               {pkg.popular && (
-                <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-purple-600 to-purple-800 text-white text-center py-2 text-sm font-semibold">
+                <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white text-center py-2 text-sm font-semibold">
                   Most Popular
                 </div>
               )}
               
-              <div className={`p-8 ${pkg.popular ? 'pt-12' : ''}`}>
-                <h3 className="text-2xl font-serif font-bold text-gray-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+              <div className="p-8 flex flex-col flex-grow">
+                {/* Title Section - Fixed Height */}
+                <div className="mb-6" style={{ minHeight: '80px' }}>
+                  <h3 className="text-2xl font-serif font-bold text-gray-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
+                    {pkg.name}
+                  </h3>
+                  <div className="text-3xl font-bold text-purple-600">
+                    {pkg.price}
+                  </div>
+                </div>
+                
+                {/* Features Section - Flexible Height */}
+                <div className="space-y-6 mb-8 flex-grow">
+                  {/* Interior Section */}
+                  <div>
+                    <h4 className="text-lg font-semibold text-purple-600 mb-3 flex items-center gap-2">
+                      Interior
+                    </h4>
+                    <ul className="space-y-2 ml-4">
+                      {pkg.interior.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-start gap-3">
+                          <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700 text-sm">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Exterior Section */}
+                  <div>
+                    <h4 className="text-lg font-semibold text-purple-600 mb-3 flex items-center gap-2">
+                      Exterior
+                    </h4>
+                    <ul className="space-y-2 ml-4">
+                      {pkg.exterior.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-start gap-3">
+                          <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700 text-sm">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                
+                {/* Button Section - Fixed at Bottom */}
+                <div className="mt-auto">
+                  <a
+                    href={phone.link}
+                    className={`w-full py-3 px-6 rounded-full font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
+                      pkg.popular
+                        ? 'bg-gradient-to-r from-purple-600 to-purple-800 text-white hover:from-purple-700 hover:to-purple-900 shadow-lg hover:shadow-purple-500/25'
+                        : 'border-2 border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white'
+                    }`}
+                  >
+                    <Phone size={16} />
+                    Book Now
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="text-center mt-12"
+        >
+          <p className="text-gray-300 mb-4">
+            *Prices vary based on vehicle size and condition. Free estimates available.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400">
+            <span>✓ 100% Satisfaction Guarantee</span>
+            <span>✓ Eco-Friendly Products</span>
+            <span>✓ Mobile Service Included</span>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default Services;
                   {pkg.name}
                 </h3>
                 <div className="text-3xl font-bold text-purple-600 mb-6">
