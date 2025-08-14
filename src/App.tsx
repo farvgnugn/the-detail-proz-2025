@@ -66,7 +66,21 @@ function MainApp() {
       setIsAdminRoute(path === '/admin');
     };
 
+    // Also handle hash-based routing for admin
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash === '#admin' || window.location.pathname === '/admin') {
+        setIsAdminRoute(true);
+      }
+    };
+
     window.addEventListener('popstate', handlePopState);
+    window.addEventListener('hashchange', handleHashChange);
+    
+    // Check initial route
+    handlePopState();
+    handleHashChange();
+    
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 

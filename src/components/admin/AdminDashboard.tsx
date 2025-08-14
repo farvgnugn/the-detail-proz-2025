@@ -89,7 +89,7 @@ const AdminDashboard: React.FC = () => {
                 <span>{user?.email}</span>
               </div>
               <button
-                onClick={signOut}
+                onClick={logout}
                 className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <LogOut size={16} />

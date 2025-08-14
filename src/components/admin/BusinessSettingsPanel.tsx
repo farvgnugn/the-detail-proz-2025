@@ -18,8 +18,29 @@ const BusinessSettingsPanel: React.FC = () => {
   const loadSettings = async () => {
     try {
       setError('');
-      const data = await adminService.getBusinessSettings();
-      setSettings(data);
+      // Check if Supabase is configured
+      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+        setError('Supabase not configured. Please set up your database connection.');
+        return;
+      }
+      
+      try {
+        const data = await adminService.getBusinessSettings();
+        setSettings(data);
+      } catch (dbError: any) {
+        // If no settings exist, create default ones
+        if (dbError.message?.includes('No rows')) {
+          setSettings({
+            id: 'default',
+            phone_number: '9033996021',
+            phone_formatted: '(903) 399-6021',
+            phone_link: 'tel:+19033996021',
+            updated_at: new Date().toISOString()
+          });
+        } else {
+          throw dbError;
+        }
+      }
     } catch (error) {
       console.error('Error loading business settings:', error);
       setError('Failed to load business settings. Please check your Supabase connection.');

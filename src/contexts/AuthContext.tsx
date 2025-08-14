@@ -73,6 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loading,
     signIn,
     signOut,
+    logout: signOut,
   };
 
   return (
