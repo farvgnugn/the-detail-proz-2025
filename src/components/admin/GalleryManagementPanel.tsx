@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image, Plus, Edit, Trash2, Save, X, Upload } from 'lucide-react';
+import { Image, Plus, Edit, Trash2, Save, X, Upload, AlertCircle } from 'lucide-react';
 import { adminService } from '../../services/adminService';
 import { GalleryImage } from '../../types/admin';
+import { supabase } from '../../lib/supabase';
 
 const GalleryManagementPanel: React.FC = () => {
   const [images, setImages] = useState<GalleryImage[]>([]);
@@ -16,6 +17,8 @@ const GalleryManagementPanel: React.FC = () => {
     category: 'process',
     order: 0
   });
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploadError, setUploadError] = useState<string>('');
 
   useEffect(() => {
     loadImages();
@@ -59,10 +62,68 @@ const GalleryManagementPanel: React.FC = () => {
     if (!confirm('Are you sure you want to delete this image?')) return;
 
     try {
-      const updated = await adminService.deleteGalleryImage(id);
+      // Find the image to get storage path
+      const imageToDelete = images.find(img => img.id === id);
+      const storagePath = imageToDelete?.storage_path;
+      
+      const updated = await adminService.deleteGalleryImageWithFile(id, storagePath);
       setImages(updated.sort((a, b) => a.order - b.order));
     } catch (error) {
       console.error('Error deleting image:', error);
+    }
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError('File size must be less than 5MB');
+      return;
+    }
+
+    setUploadingFile(true);
+    setUploadError('');
+
+    try {
+      // Create unique filename
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `gallery/${fileName}`;
+
+      // Upload to Supabase Storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('gallery-images')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      // Get public URL
+      const { data: urlData } = supabase.storage
+        .from('gallery-images')
+        .getPublicUrl(filePath);
+
+      // Update form with uploaded image URL
+      setNewImageForm({
+        ...newImageForm,
+        url: urlData.publicUrl,
+        alt: newImageForm.alt || file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ')
+      });
+
+    } catch (error: any) {
+      console.error('Upload error:', error);
+      setUploadError(error.message || 'Failed to upload image');
+    } finally {
+      setUploadingFile(false);
     }
   };
 
@@ -70,9 +131,17 @@ const GalleryManagementPanel: React.FC = () => {
     if (!newImageForm.url || !newImageForm.alt) return;
 
     try {
-      const updated = await adminService.addGalleryImage({
+      // Store additional metadata for uploaded files
+      const imageData = {
         ...newImageForm,
-        order: images.length + 1
+        order: images.length + 1,
+        storage_path: newImageForm.url.includes('supabase') ? 
+          newImageForm.url.split('/').pop() : undefined,
+        file_size: undefined // We could store this if needed
+      };
+
+      const updated = await adminService.addGalleryImage({
+        ...imageData
       });
       setImages(updated.sort((a, b) => a.order - b.order));
       setShowAddForm(false);
@@ -82,6 +151,7 @@ const GalleryManagementPanel: React.FC = () => {
         category: 'process',
         order: 0
       });
+      setUploadError('');
     } catch (error) {
       console.error('Error adding image:', error);
     }
@@ -144,18 +214,83 @@ const GalleryManagementPanel: React.FC = () => {
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Image URL
-                  </label>
-                  <input
-                    type="url"
-                    value={newImageForm.url}
-                    onChange={(e) => setNewImageForm({ ...newImageForm, url: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    placeholder="https://example.com/image.jpg"
-                  />
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Upload Image File
+                      </label>
+                      <div className="flex items-center justify-center w-full">
+                        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                            {uploadingFile ? (
+                              <>
+                                <div className="w-8 h-8 border-2 border-purple-600 border-t-transparent rounded-full animate-spin mb-2"></div>
+                                <p className="text-sm text-gray-500">Uploading...</p>
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="w-8 h-8 mb-2 text-gray-400" />
+                                <p className="mb-2 text-sm text-gray-500">
+                                  <span className="font-semibold">Click to upload</span> or drag and drop
+                                </p>
+                                <p className="text-xs text-gray-500">PNG, JPG, JPEG up to 5MB</p>
+                              </>
+                            )}
+                          </div>
+                          <input
+                            type="file"
+                            className="hidden"
+                            accept="image/*"
+                            onChange={handleFileUpload}
+                            disabled={uploadingFile}
+                          />
+                        </label>
+                      </div>
+                      
+                      {uploadError && (
+                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm flex items-center gap-2">
+                          <AlertCircle size={16} />
+                          {uploadError}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="text-center text-gray-500 text-sm">
+                      — OR —
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Image URL
+                      </label>
+                      <input
+                        type="url"
+                        value={newImageForm.url}
+                        onChange={(e) => setNewImageForm({ ...newImageForm, url: e.target.value })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        placeholder="https://example.com/image.jpg"
+                      />
+                    </div>
+                  </div>
                 </div>
                 
+                {/* Preview uploaded image */}
+                {newImageForm.url && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Preview
+                    </label>
+                    <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden">
+                      <img
+                        src={newImageForm.url}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                        onError={() => setUploadError('Invalid image URL')}
+                      />
+                    </div>
+                  </div>
+                )}
+
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -189,7 +324,7 @@ const GalleryManagementPanel: React.FC = () => {
                 <div className="flex gap-3">
                   <button
                     onClick={addNewImage}
-                    disabled={!newImageForm.url || !newImageForm.alt}
+                    disabled={!newImageForm.url || !newImageForm.alt || uploadingFile}
                     className="bg-gradient-to-r from-purple-600 to-purple-800 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-700 hover:to-purple-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     <Save size={16} />
@@ -197,6 +332,7 @@ const GalleryManagementPanel: React.FC = () => {
                   </button>
                   <button
                     onClick={() => setShowAddForm(false)}
+                    disabled={uploadingFile}
                     className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-50 transition-colors"
                   >
                     Cancel

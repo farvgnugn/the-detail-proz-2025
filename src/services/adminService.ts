@@ -131,6 +131,36 @@ class AdminService {
     return this.getGalleryImages();
   }
 
+  async deleteGalleryImageWithFile(id: string, storagePath?: string): Promise<GalleryImage[]> {
+    // If there's a storage path, delete the file from Supabase Storage
+    if (storagePath) {
+      try {
+        const { error: storageError } = await supabase.storage
+          .from('gallery-images')
+          .remove([`gallery/${storagePath}`]);
+        
+        if (storageError) {
+          console.warn('Failed to delete file from storage:', storageError);
+        }
+      } catch (error) {
+        console.warn('Error deleting file from storage:', error);
+      }
+    }
+
+    // Delete the database record
+    const { error } = await supabase
+      .from('gallery_images')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting gallery image:', error);
+      throw error;
+    }
+
+    return this.getGalleryImages();
+  }
+
   async updateGalleryImage(imageData: Partial<GalleryImage> & { id: string }): Promise<GalleryImage[]> {
     const { error } = await supabase
       .from('gallery_images')
