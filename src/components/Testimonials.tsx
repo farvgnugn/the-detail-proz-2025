@@ -213,7 +213,7 @@ const Testimonials: React.FC = () => {
                   {testimonial.source === 'google' && (
                     <div className="flex items-center gap-2 mt-4 pt-4 border-t border-gray-100">
                       <img 
-                        src="https://developers.google.com/static/maps/images/google_on_white_hdpi.png" 
+                        src="/assets/google_on_white_hdpi.png" 
                         alt="Google" 
                         className="h-4"
                       />
