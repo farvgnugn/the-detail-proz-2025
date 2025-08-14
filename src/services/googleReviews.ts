@@ -91,7 +91,7 @@ class GoogleReviewsService {
       location: "Google Review",
       rating: review.rating,
       text: this.formatReviewText(review.text),
-      image: review.profile_photo_url || "/src/assets/customer_avatar_2.png",
+      image: review.profile_photo_url || "/assets/customer_avatar_2.png",
       date: review.relative_time_description,
       isGoogleReview: true
     };

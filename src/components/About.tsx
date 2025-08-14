@@ -90,7 +90,7 @@ const About: React.FC = () => {
           >
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img 
-                src="/src/assets/IMG_9204.jpeg"
+                src="/assets/IMG_9204.jpeg"
                 alt="The Detail Proz professional car detailing work"
                 className="w-full h-96 object-cover"
               />
