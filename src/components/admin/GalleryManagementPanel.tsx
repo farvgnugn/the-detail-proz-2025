@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Image, Plus, Edit, Trash2, Save, X, Upload, AlertCircle } from 'lucide-react';
-import { adminService } from '../../services/adminService';
-import { GalleryImage } from '../../types/admin';
 import { supabase } from '../../lib/supabase';
+
+interface GalleryImage {
+  id: string;
+  url: string;
+  alt: string;
+  category: 'before' | 'after' | 'process';
+  order_index: number;
+  created_at: string;
+  storage_path?: string;
+  file_size?: number;
+}
 
 const GalleryManagementPanel: React.FC = () => {
   const [images, setImages] = useState<GalleryImage[]>([]);
@@ -11,11 +20,11 @@ const GalleryManagementPanel: React.FC = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<GalleryImage>>({});
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newImageForm, setNewImageForm] = useState<Omit<GalleryImage, 'id' | 'createdAt'>>({
+  const [newImageForm, setNewImageForm] = useState<Omit<GalleryImage, 'id' | 'created_at'>>({
     url: '',
     alt: '',
     category: 'process',
-    order: 0,
+    order_index: 0,
     storage_path: undefined,
     file_size: undefined
   });
@@ -28,8 +37,17 @@ const GalleryManagementPanel: React.FC = () => {
 
   const loadImages = async () => {
     try {
-      const data = await adminService.getGalleryImages();
-      setImages(data.sort((a, b) => a.order - b.order));
+      const { data, error } = await supabase
+        .from('gallery_images')
+        .select('*')
+        .order('order_index', { ascending: true });
+
+      if (error) {
+        console.error('Error loading gallery images:', error);
+        return;
+      }
+
+      setImages(data || []);
     } catch (error) {
       console.error('Error loading gallery images:', error);
     } finally {
@@ -51,8 +69,17 @@ const GalleryManagementPanel: React.FC = () => {
     if (!editingId || !editForm.id) return;
 
     try {
-      const updated = await adminService.updateGalleryImage(editForm as GalleryImage);
-      setImages(updated.sort((a, b) => a.order - b.order));
+      const { error } = await supabase
+        .from('gallery_images')
+        .update(editForm)
+        .eq('id', editingId);
+
+      if (error) {
+        console.error('Error updating image:', error);
+        return;
+      }
+
+      await loadImages();
       setEditingId(null);
       setEditForm({});
     } catch (error) {
@@ -68,8 +95,29 @@ const GalleryManagementPanel: React.FC = () => {
       const imageToDelete = images.find(img => img.id === id);
       const storagePath = imageToDelete?.storage_path;
       
-      const updated = await adminService.deleteGalleryImageWithFile(id, storagePath);
-      setImages(updated.sort((a, b) => a.order - b.order));
+      // Delete from storage if it exists
+      if (storagePath) {
+        const { error: storageError } = await supabase.storage
+          .from('gallery-images')
+          .remove([`gallery/${storagePath}`]);
+        
+        if (storageError) {
+          console.warn('Failed to delete file from storage:', storageError);
+        }
+      }
+
+      // Delete from database
+      const { error } = await supabase
+        .from('gallery_images')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error deleting image:', error);
+        return;
+      }
+
+      await loadImages();
     } catch (error) {
       console.error('Error deleting image:', error);
     }
@@ -136,22 +184,30 @@ const GalleryManagementPanel: React.FC = () => {
       // Store additional metadata for uploaded files
       const imageData = {
         ...newImageForm,
-        order: images.length + 1,
+        order_index: images.length + 1,
         storage_path: newImageForm.url.includes('supabase') ? 
           newImageForm.url.split('/').pop() : undefined,
         file_size: undefined // We could store this if needed
       };
 
-      const updated = await adminService.addGalleryImage({
-        ...imageData
-      });
-      setImages(updated.sort((a, b) => a.order - b.order));
+      const { error } = await supabase
+        .from('gallery_images')
+        .insert([imageData]);
+
+      if (error) {
+        console.error('Error adding image:', error);
+        return;
+      }
+
+      await loadImages();
       setShowAddForm(false);
       setNewImageForm({
         url: '',
         alt: '',
         category: 'process',
-        order: 0
+        order_index: 0,
+        storage_path: undefined,
+        file_size: undefined
       });
       setUploadError('');
     } catch (error) {
@@ -452,7 +508,7 @@ const GalleryManagementPanel: React.FC = () => {
                         }`}>
                           {image.category}
                         </span>
-                        <span className="text-xs text-gray-500">#{image.order}</span>
+                       <span className="text-xs text-gray-500">#{image.order_index}</span>
                       </div>
                       <p className="text-sm text-gray-700 line-clamp-2">{image.alt}</p>
                     </div>
