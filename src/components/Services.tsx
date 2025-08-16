@@ -227,7 +227,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
   return (
     <section id="services" className="py-20 bg-gradient-to-b from-purple-900 to-black relative overflow-hidden">
       {/* Water Beading Pattern Background */}
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
         <div className="absolute inset-0" style={{
           backgroundImage: `radial-gradient(circle at 20% 30%, rgba(255,255,255,0.8) 2px, transparent 2px),
                            radial-gradient(circle at 60% 70%, rgba(255,255,255,0.6) 1.5px, transparent 1.5px),
@@ -244,7 +244,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
       </div>
       
       {/* Additional subtle water droplet overlay */}
-      <div className="absolute inset-0 opacity-5">
+      <div className="absolute inset-0 opacity-5 pointer-events-none">
         <div className="absolute inset-0" style={{
           backgroundImage: `radial-gradient(ellipse 3px 4px at 25% 25%, rgba(255,255,255,0.9) 0%, transparent 50%),
                            radial-gradient(ellipse 2px 3px at 75% 45%, rgba(255,255,255,0.7) 0%, transparent 50%),
@@ -255,7 +255,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
         }}></div>
       </div>
 
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 30 }}
@@ -272,7 +272,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
           </p>
 
           {/* Vehicle Size Selector */}
-          <div className="max-w-md mx-auto mb-8">
+          <div className="max-w-md mx-auto mb-8 relative z-20">
             <label className="block text-white text-lg font-medium mb-4">
               Select Your Vehicle Size:
             </label>
@@ -293,7 +293,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                       console.log('Setting selectedVehicleSize to:', size.id);
                       console.log('Selected vehicle size state updated to:', size.id);
                     }}
-                    className={`px-3 py-3 rounded-lg font-medium transition-all duration-300 text-sm border-2 cursor-pointer ${
+                    className={`px-3 py-3 rounded-lg font-medium transition-all duration-300 text-sm border-2 cursor-pointer relative z-30 ${
                       selectedVehicleSize === size.id
                         ? 'bg-white text-purple-900 shadow-lg border-white transform scale-105'
                         : 'bg-white/10 text-white hover:bg-white/20 border-white/30 hover:border-white/50'
