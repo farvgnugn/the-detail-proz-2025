@@ -305,11 +305,6 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                 );
               })}
             </div>
-            {selectedVehicleSize && (
-              <div className="mt-4 text-center text-white/70 text-sm">
-                Selected: {vehicleSizes.find(v => v.id === selectedVehicleSize)?.name || 'None'} (ID: {selectedVehicleSize})
-              </div>
-            )}
           </div>
         </motion.div>
         
