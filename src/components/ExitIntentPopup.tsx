@@ -15,26 +15,47 @@ const ExitIntentPopup: React.FC<ExitIntentPopupProps> = ({ phone }) => {
 
   useEffect(() => {
     const handleMouseLeave = (e: MouseEvent) => {
-      // Only trigger if mouse leaves from the top of the page and hasn't been shown before
-      if (e.clientY <= 0 && !hasShown) {
+      // Only trigger if mouse leaves from the top of the page (exit intent) and hasn't been shown before
+      if (e.clientY <= 0 && !hasShown && e.target === document.documentElement) {
         setIsVisible(true);
         setHasShown(true);
       }
     };
 
-    // Also show after 30 seconds if user hasn't left
-    const timer = setTimeout(() => {
+    // Show after 2 minutes of inactivity (much longer delay)
+    let inactivityTimer: NodeJS.Timeout;
+    
+    const resetInactivityTimer = () => {
+      clearTimeout(inactivityTimer);
       if (!hasShown) {
-        setIsVisible(true);
-        setHasShown(true);
+        inactivityTimer = setTimeout(() => {
+          setIsVisible(true);
+          setHasShown(true);
+        }, 120000); // 2 minutes instead of 30 seconds
       }
-    }, 30000);
+    };
+
+    // Reset timer on user activity
+    const handleUserActivity = () => {
+      resetInactivityTimer();
+    };
+
+    // Start the initial timer
+    resetInactivityTimer();
 
     document.addEventListener('mouseleave', handleMouseLeave);
+    document.addEventListener('mousemove', handleUserActivity);
+    document.addEventListener('scroll', handleUserActivity);
+    document.addEventListener('keydown', handleUserActivity);
+    document.addEventListener('click', handleUserActivity);
 
     return () => {
       document.removeEventListener('mouseleave', handleMouseLeave);
-      clearTimeout(timer);
+      document.removeEventListener('mousemove', handleUserActivity);
+      document.removeEventListener('scroll', handleUserActivity);
+      document.removeEventListener('keydown', handleUserActivity);
+      document.removeEventListener('click', handleUserActivity);
+      clearTimeout(inactivityTimer);
     };
   }, [hasShown]);
 
