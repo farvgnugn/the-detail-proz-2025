@@ -21,6 +21,7 @@ export interface BusinessSettings {
   phone_number: string;
   phone_formatted: string;
   phone_link: string;
+  email: string;
   updated_at: string;
 }
 

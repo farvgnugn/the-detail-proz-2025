@@ -35,6 +35,7 @@ const BusinessSettingsPanel: React.FC = () => {
             phone_number: '9033996021',
             phone_formatted: '(903) 399-6021',
             phone_link: 'tel:+19033996021',
+            email: 'info@thedetailproz.com',
             updated_at: new Date().toISOString()
           });
         } else {
@@ -159,6 +160,23 @@ const BusinessSettingsPanel: React.FC = () => {
               </p>
             </div>
 
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                Business Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={settings?.email || ''}
+                onChange={(e) => settings && setSettings({ ...settings, email: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
+                placeholder="info@thedetailproz.com"
+              />
+              <p className="mt-2 text-sm text-gray-500">
+                This email will receive form submissions from the "Get Free Estimate" form.
+              </p>
+            </div>
+
             {settings && (
               <div className="bg-gray-50 rounded-lg p-4">
                 <h4 className="font-medium text-gray-900 mb-3">Preview</h4>
@@ -170,6 +188,10 @@ const BusinessSettingsPanel: React.FC = () => {
                   <div className="flex justify-between">
                     <span className="text-gray-600">Click-to-Call Link:</span>
                     <span className="font-medium text-purple-600">{settings.phone_link}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Contact Email:</span>
+                    <span className="font-medium">{settings.email}</span>
                   </div>
                 </div>
               </div>

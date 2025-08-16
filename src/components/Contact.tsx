@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { BUSINESS_CONFIG } from '../config/constants';
 import { 
   Phone, 
   Mail, 
@@ -29,6 +30,8 @@ const Contact: React.FC<ContactProps> = ({ phone }) => {
     threshold: 0.1,
   });
 
+  const [businessEmail, setBusinessEmail] = useState(BUSINESS_CONFIG.email);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -39,6 +42,31 @@ const Contact: React.FC<ContactProps> = ({ phone }) => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Load business email from database
+  React.useEffect(() => {
+    const loadBusinessEmail = async () => {
+      try {
+        if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+          return;
+        }
+
+        const { supabase } = await import('../lib/supabase');
+        const { data, error } = await supabase
+          .from('business_settings')
+          .select('email')
+          .single();
+
+        if (!error && data?.email) {
+          setBusinessEmail(data.email);
+        }
+      } catch (error) {
+        console.log('Error loading business email, using default:', error);
+      }
+    };
+
+    loadBusinessEmail();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -51,9 +79,28 @@ const Contact: React.FC<ContactProps> = ({ phone }) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      // Create mailto link with form data
+      const subject = encodeURIComponent(`Quote Request from ${formData.name}`);
+      const body = encodeURIComponent(`
+Name: ${formData.name}
+Phone: ${formData.phone}
+Email: ${formData.email}
+Service Package: ${formData.service || 'Not specified'}
+
+Message:
+${formData.message}
+
+---
+Sent from The Detail Proz website contact form
+      `.trim());
+      
+      const mailtoLink = `mailto:${businessEmail}?subject=${subject}&body=${body}`;
+      
+      // Open email client
+      window.location.href = mailtoLink;
+      
+      // Show success message
       setSubmitStatus('success');
       setFormData({
         name: '',
@@ -65,8 +112,17 @@ const Contact: React.FC<ContactProps> = ({ phone }) => {
       
       setTimeout(() => {
         setSubmitStatus('idle');
-      }, 3000);
-    }, 2000);
+      }, 5000);
+      
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+      setTimeout(() => {
+        setSubmitStatus('idle');
+      }, 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const businessHours = [
@@ -224,7 +280,13 @@ const Contact: React.FC<ContactProps> = ({ phone }) => {
 
             {submitStatus === 'success' && (
               <div className="mb-6 p-4 bg-green-500/20 border border-green-500/30 rounded-lg text-green-300">
-                Thank you! We'll contact you within 24 hours with your free estimate.
+                Thank you! Your email client should open with your quote request. If it doesn't, please call us directly.
+              </div>
+            )}
+
+            {submitStatus === 'error' && (
+              <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-lg text-red-300">
+                There was an issue with the form. Please call us directly for your quote.
               </div>
             )}
 
@@ -338,6 +400,16 @@ const Contact: React.FC<ContactProps> = ({ phone }) => {
               <div key={index} className="trust-badge">
                 {badge.icon}
                 <span>{badge.text}</span>
+              </div>
+
+              <div className="flex items-center gap-4 p-4 bg-white/5 rounded-lg">
+                <div className="bg-purple-600 p-3 rounded-full">
+                  <Mail size={20} />
+                </div>
+                <div>
+                  <p className="font-semibold">Email</p>
+                  <p className="text-gray-300">{businessEmail}</p>
+                </div>
               </div>
             ))}
           </div>
