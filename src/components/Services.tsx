@@ -320,9 +320,12 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                 pkg.popular ? 'ring-2 ring-purple-500' : ''
               }`}
             >
+              {/* Popular badge - floats above card */}
               {pkg.popular && (
-                <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white text-center py-2 text-sm font-semibold">
-                  Most Popular
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-purple-600 to-purple-800 text-white shadow-lg">
+                    Most Popular
+                  </span>
                 </div>
               )}
               
