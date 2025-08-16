@@ -123,7 +123,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
   const [packages, setPackages] = useState<ServicePackage[]>(defaultPackages);
   const [vehicleSizes, setVehicleSizes] = useState<VehicleSize[]>(defaultVehicleSizes);
   const [packagePricing, setPackagePricing] = useState<PackagePricing[]>([]);
-  const [selectedVehicleSize, setSelectedVehicleSize] = useState<string>('');
+  const [selectedVehicleSize, setSelectedVehicleSize] = useState<string>('1'); // Default to first size
   const [isLoading, setIsLoading] = useState(true);
 
   const [ref, inView] = useInView({
@@ -136,11 +136,11 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
   }, []);
 
   useEffect(() => {
-    // Set default vehicle size when sizes are loaded
-    if (vehicleSizes.length > 0 && !selectedVehicleSize) {
+    // Set default vehicle size to first option
+    if (vehicleSizes.length > 0) {
       setSelectedVehicleSize(vehicleSizes[0].id);
     }
-  }, [vehicleSizes, selectedVehicleSize]);
+  }, [vehicleSizes]);
 
   const loadServiceData = async () => {
     try {
@@ -190,14 +190,19 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
   };
 
   const getPriceForPackage = (packageId: string, vehicleSizeId: string): string => {
+    console.log('Getting price for package:', packageId, 'vehicle size:', vehicleSizeId);
+    console.log('Available pricing:', packagePricing);
+    
     const pricing = packagePricing.find(
       p => p.package_id === packageId && p.vehicle_size_id === vehicleSizeId
     );
     
     if (pricing) {
-      return `$${pricing.price.toFixed(0)}`;
+      console.log('Found pricing:', pricing);
+      return `$${Math.round(pricing.price)}`;
     }
     
+    console.log('No pricing found, using fallback');
     // Fallback to original price range if no specific pricing found
     const pkg = packages.find(p => p.id === packageId);
     return pkg?.price || '$0';
@@ -267,15 +272,15 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
             <label className="block text-white text-lg font-medium mb-4">
               Select Your Vehicle Size:
             </label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-3">
               {vehicleSizes.map((size) => (
                 <button
                   key={size.id}
                   onClick={() => setSelectedVehicleSize(size.id)}
-                  className={`px-4 py-3 rounded-lg font-medium transition-all duration-300 text-sm ${
+                  className={`px-3 py-3 rounded-lg font-medium transition-all duration-300 text-sm border-2 ${
                     selectedVehicleSize === size.id
-                      ? 'bg-white text-purple-900 shadow-lg'
-                      : 'bg-white/20 text-white hover:bg-white/30'
+                      ? 'bg-white text-purple-900 shadow-lg border-white transform scale-105'
+                      : 'bg-white/10 text-white hover:bg-white/20 border-white/30 hover:border-white/50'
                   }`}
                 >
                   {size.name}
@@ -308,7 +313,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                   <h3 className="text-2xl font-serif font-bold text-gray-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
                     {pkg.name}
                   </h3>
-                  <div className="text-3xl font-bold text-purple-600">
+                  <div className="text-3xl font-bold text-purple-600" key={`${pkg.id}-${selectedVehicleSize}`}>
                     {selectedVehicleSize ? getPriceForPackage(pkg.id, selectedVehicleSize) : pkg.price}
                   </div>
                 </div>
@@ -372,7 +377,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
           className="text-center mt-12"
         >
           <p className="text-gray-300 mb-4">
-            *Prices shown for selected vehicle size. Free estimates available.
+            *Prices shown for {vehicleSizes.find(v => v.id === selectedVehicleSize)?.name || 'selected vehicle size'}. Free estimates available.
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400">
             <span>✓ 100% Satisfaction Guarantee</span>
