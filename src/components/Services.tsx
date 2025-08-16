@@ -315,8 +315,9 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
               key={pkg.id}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
+              whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`bg-white rounded-2xl shadow-xl transform hover:scale-105 transition-all duration-300 flex flex-col overflow-hidden ${
+              className={`bg-white rounded-2xl shadow-xl flex flex-col overflow-hidden ${
                   pkg.popular ? 'ring-2 ring-purple-500' : ''
                 }`}
               >
