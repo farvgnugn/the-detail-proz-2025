@@ -157,7 +157,7 @@ const Gallery: React.FC = () => {
         <div className="masonry-grid max-w-6xl mx-auto relative z-10">
           {galleryImages.map((image, index) => (
             <motion.div
-              key={image.id}
+              key={`gallery-${image.id}-${index}`}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
@@ -167,7 +167,7 @@ const Gallery: React.FC = () => {
               <div className="relative overflow-hidden rounded-xl shadow-2xl border border-white/10">
                 {!imagesLoaded.has(image.id) && (
                   <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
-                    <div className="loading-spinner border-purple-600"></div>
+                    <div className="w-6 h-6 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
                   </div>
                 )}
                 <img
