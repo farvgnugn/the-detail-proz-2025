@@ -190,19 +190,14 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
   };
 
   const getPriceForPackage = (packageId: string, vehicleSizeId: string): string => {
-    console.log('Getting price for package:', packageId, 'vehicle size:', vehicleSizeId);
-    console.log('Available pricing:', packagePricing);
-    
     const pricing = packagePricing.find(
       p => p.package_id === packageId && p.vehicle_size_id === vehicleSizeId
     );
     
     if (pricing) {
-      console.log('Found pricing:', pricing);
       return `$${Math.round(pricing.price)}`;
     }
     
-    console.log('No pricing found, using fallback');
     // Fallback to original price range if no specific pricing found
     const pkg = packages.find(p => p.id === packageId);
     return pkg?.price || '$0';
@@ -277,6 +272,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                 <button
                   key={size.id}
                   onClick={() => setSelectedVehicleSize(size.id)}
+                    console.log('Clicked vehicle size:', size.id, size.name);
                   className={`px-3 py-3 rounded-lg font-medium transition-all duration-300 text-sm border-2 ${
                     selectedVehicleSize === size.id
                       ? 'bg-white text-purple-900 shadow-lg border-white transform scale-105'
@@ -286,6 +282,9 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                   {size.name}
                 </button>
               ))}
+            </div>
+            <div className="mt-4 text-center text-white/70 text-sm">
+              Selected: {vehicleSizes.find(v => v.id === selectedVehicleSize)?.name || 'None'}
             </div>
           </div>
         </motion.div>
@@ -313,7 +312,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                   <h3 className="text-2xl font-serif font-bold text-gray-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
                     {pkg.name}
                   </h3>
-                  <div className="text-3xl font-bold text-purple-600" key={`${pkg.id}-${selectedVehicleSize}`}>
+                  <div className="text-3xl font-bold text-purple-600">
                     {selectedVehicleSize ? getPriceForPackage(pkg.id, selectedVehicleSize) : pkg.price}
                   </div>
                 </div>
