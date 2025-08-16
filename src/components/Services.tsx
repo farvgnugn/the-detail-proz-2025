@@ -138,9 +138,10 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
   useEffect(() => {
     // Set default vehicle size to first option
     if (vehicleSizes.length > 0) {
-      const firstSizeId = vehicleSizes[0].id;
-      setSelectedVehicleSize(firstSizeId);
-      console.log('Setting default vehicle size:', firstSizeId, vehicleSizes[0].name);
+      const firstSize = vehicleSizes[0];
+      console.log('Available vehicle sizes:', vehicleSizes);
+      console.log('Setting default vehicle size:', firstSize.id, firstSize.name);
+      setSelectedVehicleSize(firstSize.id);
     }
   }, [vehicleSizes]);
 
@@ -280,8 +281,10 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                 <button
                   key={size.id}
                   onClick={() => {
+                    console.log('Button clicked for size:', size.id, size.name);
+                    console.log('Current selectedVehicleSize before update:', selectedVehicleSize);
                     setSelectedVehicleSize(size.id);
-                    console.log('Clicked vehicle size:', size.id, size.name);
+                    console.log('Setting selectedVehicleSize to:', size.id);
                     console.log('Selected vehicle size state updated to:', size.id);
                   }}
                   className={`px-3 py-3 rounded-lg font-medium transition-all duration-300 text-sm border-2 ${
@@ -301,6 +304,11 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
             )}
           </div>
         </motion.div>
+        
+        {/* Debug Info */}
+        <div className="text-center text-white/50 text-xs mb-4">
+          Debug: Available sizes: {vehicleSizes.map(v => `${v.name}(${v.id})`).join(', ')}
+        </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {packages.map((pkg, index) => (
