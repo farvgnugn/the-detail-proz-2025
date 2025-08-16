@@ -316,18 +316,24 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-              className={`relative bg-white rounded-2xl shadow-xl overflow-hidden transform hover:scale-105 transition-all duration-300 flex flex-col ${
-                pkg.popular ? 'ring-2 ring-purple-500' : ''
-              }`}
+              // NOTE: overflow-visible so the badge can sit above the bubble
+              className="relative overflow-visible"
             >
-              {/* Popular badge - floats above card */}
+              {/* Full-width ribbon ABOVE the bubble */}
               {pkg.popular && (
-                <div className="absolute -top-6 left-0 w-full">
-                  <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white text-center py-2 text-sm font-semibold rounded-t-xl shadow-lg">
+                <div className="absolute -top-8 left-0 w-full z-10">
+                  <div className="text-white text-center py-4 text-lg font-bold rounded-t-2xl shadow-lg
+                                  bg-gradient-to-r from-purple-600 to-purple-800">
                     Most Popular
                   </div>
                 </div>
               )}
+            
+              {/* Inner card keeps the rounded bubble & clipping for its own contents */}
+              <div
+                className={`bg-white rounded-2xl shadow-xl transform hover:scale-105 transition-all duration-300
+                            flex flex-col overflow-hidden ${pkg.popular ? 'ring-2 ring-purple-500' : ''}`}
+              >              
               
               <div className="p-8 flex flex-col flex-grow">
                 {/* Title Section - Fixed Height */}
