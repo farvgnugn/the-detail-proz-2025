@@ -277,25 +277,31 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
               Select Your Vehicle Size:
             </label>
             <div className="grid grid-cols-3 gap-3">
-              {vehicleSizes.map((size) => (
-                <button
-                  key={size.id}
-                  onClick={() => {
-                    console.log('Button clicked for size:', size.id, size.name);
-                    console.log('Current selectedVehicleSize before update:', selectedVehicleSize);
-                    setSelectedVehicleSize(size.id);
-                    console.log('Setting selectedVehicleSize to:', size.id);
-                    console.log('Selected vehicle size state updated to:', size.id);
-                  }}
-                  className={`px-3 py-3 rounded-lg font-medium transition-all duration-300 text-sm border-2 ${
-                    selectedVehicleSize === size.id
-                      ? 'bg-white text-purple-900 shadow-lg border-white transform scale-105'
-                      : 'bg-white/10 text-white hover:bg-white/20 border-white/30 hover:border-white/50'
-                  }`}
-                >
-                  {size.name}
-                </button>
-              ))}
+              {vehicleSizes.map((size, index) => {
+                console.log('Rendering button for:', size.name, 'ID:', size.id, 'Index:', index);
+                return (
+                  <button
+                    key={`vehicle-size-${size.id}-${index}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('Button clicked for size:', size.id, size.name);
+                      console.log('Current selectedVehicleSize before update:', selectedVehicleSize);
+                      setSelectedVehicleSize(size.id);
+                      console.log('Setting selectedVehicleSize to:', size.id);
+                      console.log('Selected vehicle size state updated to:', size.id);
+                    }}
+                    className={`px-3 py-3 rounded-lg font-medium transition-all duration-300 text-sm border-2 cursor-pointer ${
+                      selectedVehicleSize === size.id
+                        ? 'bg-white text-purple-900 shadow-lg border-white transform scale-105'
+                        : 'bg-white/10 text-white hover:bg-white/20 border-white/30 hover:border-white/50'
+                    }`}
+                    type="button"
+                  >
+                    {size.name}
+                  </button>
+                );
+              })}
             </div>
             {selectedVehicleSize && (
               <div className="mt-4 text-center text-white/70 text-sm">
@@ -305,10 +311,6 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
           </div>
         </motion.div>
         
-        {/* Debug Info */}
-        <div className="text-center text-white/50 text-xs mb-4">
-          Debug: Available sizes: {vehicleSizes.map(v => `${v.name}(${v.id})`).join(', ')}
-        </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {packages.map((pkg, index) => (
