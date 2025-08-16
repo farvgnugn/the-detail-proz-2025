@@ -366,6 +366,8 @@ class AdminService {
         vehicle_size_id: vehicleSizeId,
         price: price,
         updated_at: new Date().toISOString(),
+      }, {
+        onConflict: 'package_id,vehicle_size_id'
       });
 
     if (error) {
