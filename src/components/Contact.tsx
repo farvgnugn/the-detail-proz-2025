@@ -284,7 +284,7 @@ const Contact: React.FC<ContactProps> = ({ phone }) => {
                   name="service"
                   value={formData.service}
                   onChange={handleInputChange}
-                  className="bg-white/5 border border-white/20 text-white rounded-lg p-3 w-full [&>option]:bg-gray-800 [&>option]:text-white"
+                  className="bg-white/5 border border-white/20 text-white rounded-lg p-3 w-full [&>option]:bg-purple-900 [&>option]:text-white"
                 >
                   <option value="">Select a package</option>
                   <option value="essential">Essential Detail ($89-$129)</option>
