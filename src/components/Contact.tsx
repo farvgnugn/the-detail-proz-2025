@@ -202,6 +202,16 @@ Sent from The Detail Proz website contact form
 
                 <div className="flex items-center gap-4 p-4 bg-white/5 rounded-lg">
                   <div className="bg-purple-600 p-3 rounded-full">
+                    <Mail size={20} />
+                  </div>
+                  <div>
+                    <p className="font-semibold">Email</p>
+                    <p className="text-gray-300">{businessEmail}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 p-4 bg-white/5 rounded-lg">
+                  <div className="bg-purple-600 p-3 rounded-full">
                     <MapPin size={20} />
                   </div>
                   <div>
@@ -400,16 +410,6 @@ Sent from The Detail Proz website contact form
               <div key={index} className="trust-badge">
                 {badge.icon}
                 <span>{badge.text}</span>
-              </div>
-
-              <div className="flex items-center gap-4 p-4 bg-white/5 rounded-lg">
-                <div className="bg-purple-600 p-3 rounded-full">
-                  <Mail size={20} />
-                </div>
-                <div>
-                  <p className="font-semibold">Email</p>
-                  <p className="text-gray-300">{businessEmail}</p>
-                </div>
               </div>
             ))}
           </div>
