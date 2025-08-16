@@ -123,7 +123,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
   const [packages, setPackages] = useState<ServicePackage[]>(defaultPackages);
   const [vehicleSizes, setVehicleSizes] = useState<VehicleSize[]>(defaultVehicleSizes);
   const [packagePricing, setPackagePricing] = useState<PackagePricing[]>([]);
-  const [selectedVehicleSize, setSelectedVehicleSize] = useState<string>('1'); // Default to first size
+  const [selectedVehicleSize, setSelectedVehicleSize] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
 
   const [ref, inView] = useInView({
@@ -138,7 +138,9 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
   useEffect(() => {
     // Set default vehicle size to first option
     if (vehicleSizes.length > 0) {
-      setSelectedVehicleSize(vehicleSizes[0].id);
+      const firstSizeId = vehicleSizes[0].id;
+      setSelectedVehicleSize(firstSizeId);
+      console.log('Setting default vehicle size:', firstSizeId, vehicleSizes[0].name);
     }
   }, [vehicleSizes]);
 
@@ -190,9 +192,14 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
   };
 
   const getPriceForPackage = (packageId: string, vehicleSizeId: string): string => {
+    console.log('Getting price for package:', packageId, 'vehicle size:', vehicleSizeId);
+    console.log('Available pricing data:', packagePricing);
+    
     const pricing = packagePricing.find(
       p => p.package_id === packageId && p.vehicle_size_id === vehicleSizeId
     );
+    
+    console.log('Found pricing:', pricing);
     
     if (pricing) {
       return `$${Math.round(pricing.price)}`;
@@ -200,6 +207,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
     
     // Fallback to original price range if no specific pricing found
     const pkg = packages.find(p => p.id === packageId);
+    console.log('Using fallback price for package:', pkg?.name, pkg?.price);
     return pkg?.price || '$0';
   };
 
@@ -274,6 +282,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                   onClick={() => {
                     setSelectedVehicleSize(size.id);
                     console.log('Clicked vehicle size:', size.id, size.name);
+                    console.log('Selected vehicle size state updated to:', size.id);
                   }}
                   className={`px-3 py-3 rounded-lg font-medium transition-all duration-300 text-sm border-2 ${
                     selectedVehicleSize === size.id
@@ -285,9 +294,11 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                 </button>
               ))}
             </div>
-            <div className="mt-4 text-center text-white/70 text-sm">
-              Selected: {vehicleSizes.find(v => v.id === selectedVehicleSize)?.name || 'None'}
-            </div>
+            {selectedVehicleSize && (
+              <div className="mt-4 text-center text-white/70 text-sm">
+                Selected: {vehicleSizes.find(v => v.id === selectedVehicleSize)?.name || 'None'} (ID: {selectedVehicleSize})
+              </div>
+            )}
           </div>
         </motion.div>
 
@@ -315,7 +326,13 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                     {pkg.name}
                   </h3>
                   <div className="text-3xl font-bold text-purple-600">
-                    {selectedVehicleSize ? getPriceForPackage(pkg.id, selectedVehicleSize) : pkg.price}
+                    {selectedVehicleSize ? (
+                      <span key={`${pkg.id}-${selectedVehicleSize}`}>
+                        {getPriceForPackage(pkg.id, selectedVehicleSize)}
+                      </span>
+                    ) : (
+                      pkg.price
+                    )}
                   </div>
                 </div>
                 
