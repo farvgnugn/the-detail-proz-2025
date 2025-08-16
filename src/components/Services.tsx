@@ -271,8 +271,10 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
               {vehicleSizes.map((size) => (
                 <button
                   key={size.id}
-                  onClick={() => setSelectedVehicleSize(size.id)}
+                  onClick={() => {
+                    setSelectedVehicleSize(size.id);
                     console.log('Clicked vehicle size:', size.id, size.name);
+                  }}
                   className={`px-3 py-3 rounded-lg font-medium transition-all duration-300 text-sm border-2 ${
                     selectedVehicleSize === size.id
                       ? 'bg-white text-purple-900 shadow-lg border-white transform scale-105'
