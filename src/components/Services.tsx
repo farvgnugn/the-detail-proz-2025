@@ -406,7 +406,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                   <a
                     href={phone.link}
                     className={`w-full py-3 px-6 rounded-full font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
-                <div className="mb-2">
+                      pkg.popular
                         ? 'bg-gradient-to-r from-purple-600 to-purple-800 text-white hover:from-purple-700 hover:to-purple-900 shadow-lg hover:shadow-purple-500/25'
                         : 'border-2 border-purple-600 text-purple-600 hover:bg-purple-600 hover:text-white'
                     }`}
