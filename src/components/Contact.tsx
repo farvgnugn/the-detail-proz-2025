@@ -80,39 +80,41 @@ const Contact: React.FC<ContactProps> = ({ phone }) => {
     setIsSubmitting(true);
     
     try {
-      // Create mailto link with form data
-      const subject = encodeURIComponent(`Quote Request from ${formData.name}`);
-      const body = encodeURIComponent(`
-Name: ${formData.name}
-Phone: ${formData.phone}
-Email: ${formData.email}
-Service Package: ${formData.service || 'Not specified'}
-
-Message:
-${formData.message}
-
----
-Sent from The Detail Proz website contact form
-      `.trim());
-      
-      const mailtoLink = `mailto:${businessEmail}?subject=${subject}&body=${body}`;
-      
-      // Open email client
-      window.location.href = mailtoLink;
-      
-      // Show success message
-      setSubmitStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        service: '',
-        message: ''
+      // Send email via Supabase Edge Function
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-contact-email`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          businessEmail
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
+
+      const result = await response.json();
       
-      setTimeout(() => {
-        setSubmitStatus('idle');
-      }, 5000);
+      if (result.success) {
+        setSubmitStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          service: '',
+          message: ''
+        });
+        
+        setTimeout(() => {
+          setSubmitStatus('idle');
+        }, 5000);
+      } else {
+        throw new Error(result.error || 'Failed to send email');
+      }
       
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -290,13 +292,13 @@ Sent from The Detail Proz website contact form
 
             {submitStatus === 'success' && (
               <div className="mb-6 p-4 bg-green-500/20 border border-green-500/30 rounded-lg text-green-300">
-                Thank you! Your email client should open with your quote request. If it doesn't, please call us directly.
+                Thank you! Your quote request has been sent successfully. We'll get back to you within 24 hours.
               </div>
             )}
 
             {submitStatus === 'error' && (
               <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-lg text-red-300">
-                There was an issue with the form. Please call us directly for your quote.
+                There was an issue sending your request. Please try again or call us directly.
               </div>
             )}
 
