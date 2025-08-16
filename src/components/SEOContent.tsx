@@ -1,7 +1,7 @@
 import React from 'react';
 
 const SEOContent: React.FC = () => {
-  return null;
+  return (null
   );
 };
 
