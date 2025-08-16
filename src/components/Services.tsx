@@ -43,7 +43,7 @@ const defaultPackages: ServicePackage[] = [
   {
     id: '1',
     name: 'Essential Detail',
-    price: '$89 - $129',
+    price: '$85 - $100',
     popular: false,
     interior: [
       'Vacuum all seats, carpets, and floor mats',
@@ -66,7 +66,7 @@ const defaultPackages: ServicePackage[] = [
   {
     id: '2',
     name: 'Premium Detail',
-    price: '$149 - $199',
+    price: '$120 - $160',
     popular: true,
     interior: [
       'Everything in Essential Detail',
@@ -90,7 +90,7 @@ const defaultPackages: ServicePackage[] = [
   {
     id: '3',
     name: 'Luxury Detail',
-    price: '$249 - $349',
+    price: '$150 - $200',
     popular: false,
     interior: [
       'Everything in Premium Detail',
@@ -277,7 +277,9 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
               Select Your Vehicle Size:
             </label>
             <div className="grid grid-cols-3 gap-3">
-              {vehicleSizes.map((size, index) => {
+              {
+                console.log('HERE Vehicle sizes pre-rendered: ', vehicleSizes);
+                vehicleSizes.map((size, index) => {
                 console.log('Rendering button for:', size.name, 'ID:', size.id, 'Index:', index);
                 return (
                   <button
