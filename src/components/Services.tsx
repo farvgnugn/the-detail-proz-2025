@@ -311,28 +311,6 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {packages.map((pkg, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-              className="relative"
-            >
-              {/* Most Popular Corner Overlay */}
-              {pkg.popular && (
-                <div className="absolute top-0 right-0 z-10">
-                  <div className="relative">
-                    {/* Corner triangle background */}
-                    <div className="w-0 h-0 border-l-[60px] border-l-transparent border-t-[60px] border-t-gradient-to-br from-purple-600 to-purple-800"></div>
-                    <div className="w-0 h-0 border-l-[60px] border-l-transparent border-t-[60px] border-t-purple-600"></div>
-                    
-                    <div className="absolute top-1 right-1 text-white text-xs font-bold transform rotate-45 origin-bottom-right">
-                      <span className="whitespace-nowrap">POPULAR</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
               <div
                 className={`bg-white rounded-2xl shadow-xl transform hover:scale-105 transition-all duration-300 flex flex-col overflow-hidden ${
                   pkg.popular ? 'ring-2 ring-purple-500' : ''
