@@ -278,7 +278,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
             </label>
             <div className="grid grid-cols-3 gap-3">
               {
-                console.log('HERE Vehicle sizes pre-rendered: ', vehicleSizes);
+                
                 vehicleSizes.map((size, index) => {
                 console.log('Rendering button for:', size.name, 'ID:', size.id, 'Index:', index);
                 return (
