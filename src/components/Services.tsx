@@ -331,26 +331,28 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
             
               {/* Inner card keeps the rounded bubble & clipping for its own contents */}
               <div
-                className={`bg-white rounded-2xl shadow-xl transform hover:scale-105 transition-all duration-300
-                            flex flex-col overflow-hidden ${pkg.popular ? 'ring-2 ring-purple-500' : ''}`}
-              >              
-              
-              <div className="p-8 flex flex-col flex-grow">
-                {/* Title Section - Fixed Height */}
-                <div className="mb-6" style={{ minHeight: '80px' }}>
-                  <h3 className="text-2xl font-serif font-bold text-gray-900 mb-2" style={{ fontFamily: 'Playfair Display, serif' }}>
-                    {pkg.name}
-                  </h3>
-                  <div className="text-3xl font-bold text-purple-600">
-                    {selectedVehicleSize ? (
-                      <span key={`${pkg.id}-${selectedVehicleSize}`}>
-                        {getPriceForPackage(pkg.id, selectedVehicleSize)}
-                      </span>
-                    ) : (
-                      pkg.price
-                    )}
-                  </div>
-                </div>
+    className={`bg-white rounded-2xl shadow-xl transform hover:scale-105 transition-all duration-300
+                flex flex-col overflow-hidden ${pkg.popular ? 'ring-2 ring-purple-500' : ''}`}
+  >
+    <div className="p-8 flex flex-col flex-grow">
+      {/* Title Section */}
+      <div className="mb-6" style={{ minHeight: '80px' }}>
+        <h3
+          className="text-2xl font-serif font-bold text-gray-900 mb-2"
+          style={{ fontFamily: 'Playfair Display, serif' }}
+        >
+          {pkg.name}
+        </h3>
+        <div className="text-3xl font-bold text-purple-600">
+          {selectedVehicleSize ? (
+            <span key={`${pkg.id}-${selectedVehicleSize}`}>
+              {getPriceForPackage(pkg.id, selectedVehicleSize)}
+            </span>
+          ) : (
+            pkg.price
+          )}
+        </div>
+      </div>
                 
                 {/* Features Section - Flexible Height */}
                 <div className="space-y-6 mb-8 flex-grow">
