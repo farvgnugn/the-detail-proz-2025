@@ -311,7 +311,11 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {packages.map((pkg, index) => (
-              <div
+            <motion.div
+              key={pkg.id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
                 className={`bg-white rounded-2xl shadow-xl transform hover:scale-105 transition-all duration-300 flex flex-col overflow-hidden ${
                   pkg.popular ? 'ring-2 ring-purple-500' : ''
                 }`}
@@ -393,7 +397,6 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                     Book Now
                   </a>
                 </div>
-              </div>
               </div>
             </motion.div>
           ))}
