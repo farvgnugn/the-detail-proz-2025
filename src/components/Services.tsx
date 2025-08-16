@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Check, Phone } from 'lucide-react';
@@ -19,6 +19,22 @@ interface ServicePackage {
   interior: string[];
   exterior: string[];
   order_index: number;
+  updated_at: string;
+}
+
+interface VehicleSize {
+  id: string;
+  name: string;
+  display_order: number;
+  created_at: string;
+}
+
+interface PackagePricing {
+  id: string;
+  package_id: string;
+  vehicle_size_id: string;
+  price: number;
+  created_at: string;
   updated_at: string;
 }
 
@@ -97,43 +113,95 @@ const defaultPackages: ServicePackage[] = [
   }
 ];
 
+const defaultVehicleSizes: VehicleSize[] = [
+  { id: '1', name: 'Sedan/Mid SUV', display_order: 1, created_at: new Date().toISOString() },
+  { id: '2', name: 'Large SUV', display_order: 2, created_at: new Date().toISOString() },
+  { id: '3', name: 'Oversized', display_order: 3, created_at: new Date().toISOString() }
+];
+
 const Services: React.FC<ServicesProps> = ({ phone }) => {
-  const [packages, setPackages] = React.useState<ServicePackage[]>(defaultPackages);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [packages, setPackages] = useState<ServicePackage[]>(defaultPackages);
+  const [vehicleSizes, setVehicleSizes] = useState<VehicleSize[]>(defaultVehicleSizes);
+  const [packagePricing, setPackagePricing] = useState<PackagePricing[]>([]);
+  const [selectedVehicleSize, setSelectedVehicleSize] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
 
-  React.useEffect(() => {
-    const loadServicePackages = async () => {
-      try {
-        // Only try to load from Supabase if we have the environment variables
-        if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-          console.log('Supabase not configured, using default packages');
-          setIsLoading(false);
-          return;
-        }
-
-        const { supabase } = await import('../lib/supabase');
-        const { data, error } = await supabase
-          .from('service_packages')
-          .select('*')
-          .order('order_index', { ascending: true });
-
-        if (!error && data && data.length > 0) {
-          setPackages(data);
-        }
-      } catch (error) {
-        console.log('Error loading service packages, using defaults:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadServicePackages();
+  useEffect(() => {
+    loadServiceData();
   }, []);
+
+  useEffect(() => {
+    // Set default vehicle size when sizes are loaded
+    if (vehicleSizes.length > 0 && !selectedVehicleSize) {
+      setSelectedVehicleSize(vehicleSizes[0].id);
+    }
+  }, [vehicleSizes, selectedVehicleSize]);
+
+  const loadServiceData = async () => {
+    try {
+      // Only try to load from Supabase if we have the environment variables
+      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+        console.log('Supabase not configured, using default packages');
+        setIsLoading(false);
+        return;
+      }
+
+      const { supabase } = await import('../lib/supabase');
+      
+      // Load service packages
+      const { data: packagesData, error: packagesError } = await supabase
+        .from('service_packages')
+        .select('*')
+        .order('order_index', { ascending: true });
+
+      if (!packagesError && packagesData && packagesData.length > 0) {
+        setPackages(packagesData);
+      }
+
+      // Load vehicle sizes
+      const { data: sizesData, error: sizesError } = await supabase
+        .from('vehicle_sizes')
+        .select('*')
+        .order('display_order', { ascending: true });
+
+      if (!sizesError && sizesData && sizesData.length > 0) {
+        setVehicleSizes(sizesData);
+      }
+
+      // Load package pricing
+      const { data: pricingData, error: pricingError } = await supabase
+        .from('package_pricing')
+        .select('*');
+
+      if (!pricingError && pricingData) {
+        setPackagePricing(pricingData);
+      }
+
+    } catch (error) {
+      console.log('Error loading service data, using defaults:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getPriceForPackage = (packageId: string, vehicleSizeId: string): string => {
+    const pricing = packagePricing.find(
+      p => p.package_id === packageId && p.vehicle_size_id === vehicleSizeId
+    );
+    
+    if (pricing) {
+      return `$${pricing.price.toFixed(0)}`;
+    }
+    
+    // Fallback to original price range if no specific pricing found
+    const pkg = packages.find(p => p.id === packageId);
+    return pkg?.price || '$0';
+  };
 
   if (isLoading) {
     return (
@@ -190,9 +258,31 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
             Mobile Car Detailing Packages
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-purple-400 to-purple-600 mx-auto mb-8"></div>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
             Professional mobile car detailing packages for Kilgore, Longview, Tyler & East Texas
           </p>
+
+          {/* Vehicle Size Selector */}
+          <div className="max-w-md mx-auto mb-8">
+            <label className="block text-white text-lg font-medium mb-4">
+              Select Your Vehicle Size:
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {vehicleSizes.map((size) => (
+                <button
+                  key={size.id}
+                  onClick={() => setSelectedVehicleSize(size.id)}
+                  className={`px-4 py-3 rounded-lg font-medium transition-all duration-300 text-sm ${
+                    selectedVehicleSize === size.id
+                      ? 'bg-white text-purple-900 shadow-lg'
+                      : 'bg-white/20 text-white hover:bg-white/30'
+                  }`}
+                >
+                  {size.name}
+                </button>
+              ))}
+            </div>
+          </div>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -219,7 +309,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                     {pkg.name}
                   </h3>
                   <div className="text-3xl font-bold text-purple-600">
-                    {pkg.price}
+                    {selectedVehicleSize ? getPriceForPackage(pkg.id, selectedVehicleSize) : pkg.price}
                   </div>
                 </div>
                 
@@ -282,7 +372,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
           className="text-center mt-12"
         >
           <p className="text-gray-300 mb-4">
-            *Prices vary based on vehicle size and condition. Free estimates available.
+            *Prices shown for selected vehicle size. Free estimates available.
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400">
             <span>✓ 100% Satisfaction Guarantee</span>

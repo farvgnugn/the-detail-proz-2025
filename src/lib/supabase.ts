@@ -59,3 +59,19 @@ export interface Testimonial {
   created_at: string;
   updated_at: string;
 }
+
+export interface VehicleSize {
+  id: string;
+  name: string;
+  display_order: number;
+  created_at: string;
+}
+
+export interface PackagePricing {
+  id: string;
+  package_id: string;
+  vehicle_size_id: string;
+  price: number;
+  created_at: string;
+  updated_at: string;
+}

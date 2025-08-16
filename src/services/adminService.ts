@@ -1,4 +1,5 @@
 import { supabase, BusinessSettings, ServicePackage, GalleryImage, Testimonial } from '../lib/supabase';
+import type { VehicleSize, PackagePricing } from '../lib/supabase';
 import GoogleReviewsService from './googleReviews';
 import { BUSINESS_CONFIG } from '../config/constants';
 
@@ -324,6 +325,51 @@ class AdminService {
       return { imported: newReviews.length, total: googleReviews.length };
     } catch (error) {
       console.error('Error fetching Google reviews:', error);
+      throw error;
+    }
+  }
+
+  // Vehicle Sizes Management
+  async getVehicleSizes(): Promise<VehicleSize[]> {
+    const { data, error } = await supabase
+      .from('vehicle_sizes')
+      .select('*')
+      .order('display_order', { ascending: true });
+
+    if (error) {
+      console.error('Error fetching vehicle sizes:', error);
+      throw error;
+    }
+
+    return data || [];
+  }
+
+  // Package Pricing Management
+  async getPackagePricing(): Promise<PackagePricing[]> {
+    const { data, error } = await supabase
+      .from('package_pricing')
+      .select('*');
+
+    if (error) {
+      console.error('Error fetching package pricing:', error);
+      throw error;
+    }
+
+    return data || [];
+  }
+
+  async updatePackagePricing(packageId: string, vehicleSizeId: string, price: number): Promise<void> {
+    const { error } = await supabase
+      .from('package_pricing')
+      .upsert({
+        package_id: packageId,
+        vehicle_size_id: vehicleSizeId,
+        price: price,
+        updated_at: new Date().toISOString(),
+      });
+
+    if (error) {
+      console.error('Error updating package pricing:', error);
       throw error;
     }
   }
