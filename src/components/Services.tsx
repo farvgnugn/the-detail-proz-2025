@@ -333,7 +333,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
               <div
               className={`bg-white rounded-2xl shadow-xl transform hover:scale-105 transition-all duration-300
                           flex flex-col overflow-hidden ${pkg.popular ? 'ring-2 ring-purple-500' : ''}`}
-            >
+              >
               <div className="p-8 flex flex-col flex-grow">
                 {/* Title Section */}
                 <div className="mb-6" style={{ minHeight: '80px' }}>
@@ -401,6 +401,7 @@ const Services: React.FC<ServicesProps> = ({ phone }) => {
                     Book Now
                   </a>
                 </div>
+              </div>
               </div>
             </motion.div>
           ))}
